@@ -1,10 +1,13 @@
-from jobs import Job
-from update import update_job
+from update import update_job, ensure_folder
+from jobs import Job, get_jenkins
 
 def main():
+
+    jenkins = get_jenkins()
+    
     # Curry (Freestyle job)
     curry = Job(
-        "curry",
+        "Recipes/curry",
         "freestyle_template.j2.xml",
         description="Curry build job",
         jira_site="https://jira.example.com",
@@ -21,7 +24,7 @@ def main():
     # Chapati, Samosa, Parata (Pipeline jobs)
     for recipe in ["chapati", "samosa", "parata"]:
         job = Job(
-            recipe,
+            f"Recipes/{recipe}",
             "pipeline_template.j2.xml",
             description=f"{recipe.capitalize()} pipeline job",
             jira_site="https://jira.example.com",
