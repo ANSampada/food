@@ -3,7 +3,7 @@ from jenkinsapi.custom_exceptions import UnknownJob
 
 # Connect to Jenkins
 def get_jenkins():
-    return Jenkins("http://localhost:8080", username="admin", password="admin")
+    return Jenkins("http://10.209.132.115:8080", username="sampada", password="11e16ad45ee52ec04022655004741c614f")
 
 # Deploy job (create or update)
 def update_job(name, config_xml):
