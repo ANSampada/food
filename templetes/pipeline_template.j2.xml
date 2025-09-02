@@ -1,1 +1,57 @@
+<flow-definition plugin="workflow-job">
+  <description>{{ description }}</description>
+  <logRotator>
+    <daysToKeep>30</daysToKeep>
+    <numToKeep>10</numToKeep>
+  </logRotator>
 
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>JIRA_SITE</name>
+          <defaultValue>{{ jira_site }}</defaultValue>
+          <description>Jira Site URL</description>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>CONJUR_APPLIANCE</name>
+          <defaultValue>{{ conjur_appliance }}</defaultValue>
+          <description>Conjur Appliance URL</description>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition">
+    <script>
+      pipeline {
+        agent { label '{{ label_expression }}' }
+        options {
+          buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30'))
+          timeout(time: 30, unit: 'MINUTES')
+        }
+        stages {
+          stage('Checkout') {
+            steps {
+              git branch: '{{ branch }}', url: '{{ repo_url }}'
+            }
+          }
+          stage('Build') {
+            steps {
+              sh '''{{ build_steps }}'''
+            }
+          }
+        }
+        post {
+          success {
+            mail to: '{{ notify }}', subject: "SUCCESS: ${env.JOB_NAME}", body: "Build completed"
+          }
+          failure {
+            mail to: '{{ notify }}', subject: "FAILED: ${env.JOB_NAME}", body: "Check Jenkins"
+          }
+        }
+      }
+    </script>
+    <sandbox>true</sandbox>
+  </definition>
+</flow-definition>
