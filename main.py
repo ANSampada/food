@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from update import update_job, ensure_folder, get_jenkins
 from jobs import Job
 
