@@ -2,7 +2,7 @@ from jenkinsapi.jenkins import Jenkins
 from jenkinsapi.custom_exceptions import UnknownJob
 
 def get_jenkins():
-    return Jenkins("http://localhost:8080", username="admin", password="admin")
+    return Jenkins("http://10.209.132.115:8080", username="sampada", password="11e16ad45ee52ec04022655004741c614f")
 
 def update_job(job_spec):
     jenkins = get_jenkins()
