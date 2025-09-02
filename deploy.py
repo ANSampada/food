@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from jenkinsapi.jenkins import Jenkins
 from jenkinsapi.custom_exceptions import UnknownJob
 
