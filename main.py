@@ -1,13 +1,13 @@
 from update import update_job, ensure_folder, get_jenkins
 from jobs import Job
 
-def main():
 
-    jenkins = get_jenkins()
+def main():
+    server = get_jenkins()
 
     # Ensure Recipes folder exists
-    ensure_folder(jenkins, "Recipes")
-    
+    ensure_folder(server, "Recipes")
+
     # Curry (Freestyle job)
     curry = Job(
         "Recipes/curry",
@@ -39,6 +39,7 @@ def main():
             notify="dev-team@example.com"
         )
         update_job(job)
+
 
 if __name__ == "__main__":
     main()
