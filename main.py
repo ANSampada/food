@@ -1,5 +1,5 @@
-from update import update_job, ensure_folder
-from jobs import Job, get_jenkins
+from update import update_job, ensure_folder, get_jenkins
+from jobs import Job
 
 def main():
 
