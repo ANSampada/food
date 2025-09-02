@@ -1,1 +1,60 @@
+<project>
+  <description>{{ description }}</description>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>JIRA_SITE</name>
+          <defaultValue>{{ jira_site }}</defaultValue>
+          <description>Jira Site URL</description>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>CONJUR_APPLIANCE</name>
+          <defaultValue>{{ conjur_appliance }}</defaultValue>
+          <description>Conjur Appliance URL</description>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
 
+  <logRotator>
+    <daysToKeep>30</daysToKeep>
+    <numToKeep>10</numToKeep>
+  </logRotator>
+
+  <assignedNode>{{ label_expression }}</assignedNode>
+  <canRoam>false</canRoam>
+
+  <scm class="hudson.plugins.git.GitSCM">
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>{{ repo_url }}</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>{{ branch }}</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+  </scm>
+
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>{{ build_schedule }}</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+
+  <builders>
+    <hudson.tasks.Shell>
+      <command>{{ build_steps }}</command>
+    </hudson.tasks.Shell>
+  </builders>
+
+  <publishers>
+    <hudson.tasks.Mailer>
+      <recipients>{{ notify }}</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+</project>
