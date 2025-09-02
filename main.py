@@ -4,6 +4,9 @@ from jobs import Job, get_jenkins
 def main():
 
     jenkins = get_jenkins()
+
+    # Ensure Recipes folder exists
+    ensure_folder(jenkins, "Recipes")
     
     # Curry (Freestyle job)
     curry = Job(
