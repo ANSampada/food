@@ -9,4 +9,4 @@ class Job:
         
         tmpl = env.get_template(template)
         self.name = name
-        self.config = tmpl.render(**kwargs).encode("utf-8")
+        self.config = tmpl.render(**kwargs)
