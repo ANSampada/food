@@ -1,0 +1,183 @@
+1. Class and Objects
+Example from your file:
+class Job:
+    def __init__(self, name, template, **kwargs):
+        template_dir = os.path.join(os.path.dirname(__file__), "templetes")
+        env = Environment(loader=FileSystemLoader(template_dir))
+        
+        tmpl = env.get_template(template)
+        self.name = name
+        self.config = tmpl.render(**kwargs)
+
+
+class Job:
+A class is like a blueprint.
+Here, Job is a blueprint for Jenkins jobs. It says what information (data) and behaviors (functions) a "Job" should have.
+
+def __init__:
+This is called a constructor. It runs automatically when you create an object.
+
+name and template are required inputs.
+
+**kwargs means "accept any number of extra named inputs".
+
+self:
+This means "the object itself". Every object keeps its own copy of data.
+
+Inside __init__:
+It sets:
+
+self.name = name → the object remembers its job name.
+
+self.config = tmpl.render(**kwargs) → it generates job configuration.
+
+Object (Instance)
+
+In main.py:
+
+curry = Job(
+    "Recipes/curry",
+    "freestyle_template.j2.xml",
+    description="Curry build job",
+    ...
+)
+
+
+curry is an object (also called instance) of the Job class.
+
+Think of class Job like a recipe book, and curry is a dish cooked from that recipe.
+
+You can make many objects (chapati, samosa, parata) from the same class.
+
+2. Functions (Methods)
+
+In Python, functions are defined with def.
+
+Example:
+
+def get_jenkins():
+    return jenkins.Jenkins(JENKINS_URL, username=USERNAME, password=PASSWORD)
+
+
+A function is a reusable block of code.
+
+get_jenkins() always gives you a Jenkins server connection.
+
+When a function belongs to a class, it’s called a method.
+When it stands alone (like in update.py), it’s just a normal function.
+
+3. Modules
+
+Each .py file is called a module.
+
+jobs.py defines the Job class.
+
+update.py has functions to connect to Jenkins.
+
+main.py brings everything together.
+
+You import one module into another using import.
+Example:
+
+from jobs import Job
+
+
+This means → “use the Job class from jobs.py”.
+
+4. Packages
+
+If you put multiple Python files in a folder with __init__.py, that folder becomes a package.
+Here, you don’t have one, but if you grouped jobs.py, update.py, etc., into a folder, it could be a package.
+
+5. Control Flow (Loops, If-Else)
+
+Example:
+
+for recipe in ["chapati", "samosa", "parata"]:
+    job = Job(
+        f"Recipes/{recipe}",
+        "pipeline_template.j2.xml",
+        ...
+    )
+    update_job(job)
+
+
+for → loop through items in a list.
+
+It creates three objects (chapati, samosa, parata) one by one.
+
+Example of if:
+
+if not server.job_exists(folder_name):
+    server.create_job(folder_name, FOLDER_XML)
+
+
+If the folder doesn’t exist, create it. Otherwise, skip.
+
+6. Strings and f-Strings
+f"Recipes/{recipe}"
+
+
+This is an f-string → it allows you to insert variables directly into strings.
+If recipe = "chapati", it becomes "Recipes/chapati".
+
+7. Modules from Outside (Libraries)
+
+import os → Python’s built-in module for handling files & paths.
+
+import jenkins → external library to talk to Jenkins.
+
+from jinja2 import Environment, FileSystemLoader → template engine for generating XML configs.
+
+8. Putting It All Together (Workflow)
+
+main.py runs first.
+It connects to Jenkins (get_jenkins), ensures a folder exists (ensure_folder), then creates jobs (Job objects).
+
+jobs.py defines Job class.
+Each job object builds its configuration.
+
+update.py updates Jenkins.
+It either creates a new job or updates an old one.
+
+✅ In short:
+
+Class = blueprint (Job).
+
+Object/Instance = real thing created from class (curry, chapati).
+
+self = tells each object to keep its own data.
+
+Functions = reusable tasks (some inside classes, some outside).
+
+Modules = files with Python code.
+
+Control flow = decisions (if) + repetition (for).
+---------------------------------------------------------------------------------------------------------------
+Here’s a visual diagram showing how your three files (main.py, jobs.py, update.py) work together:
+
+main.py is the controller: it calls everything.
+
+jobs.py defines the Job class (blueprint).
+
+update.py defines functions (update_job, ensure_folder, get_jenkins) to talk to Jenkins.
+
+main.py creates job objects from Job class and then calls functions in update.py to create/update them in Jenkins.
+-------------------------------------------------------------------------------------------------------------------
+Start – You execute main.py.
+
+Connect to Jenkins – Uses get_jenkins() to log into Jenkins.
+
+Ensure Folder – Calls ensure_folder() to check if "Recipes" folder exists; if not, creates it.
+
+Create Curry Job – Makes a Job object for Curry using the Job class.
+
+Send Curry Job – Calls update_job() to create/update Curry in Jenkins.
+
+Loop for Chapati, Samosa, Parata – For each one:
+
+Create a Job object
+
+Send it to Jenkins
+
+End – All jobs are created/updated. ✅
